@@ -1,6 +1,6 @@
 local addon, ns = ...
 
-local mainFrameTitle = "|ccff6ff98DressMe Transmog |cffffffffv2.1|r"
+local mainFrameTitle = "|ccff6ff98DressMe Transmog |cffffffffv2.2|r"
 
 local sex = UnitSex("player")
 local _, raceFileName = UnitRace("player")
@@ -14,6 +14,8 @@ local miscellaneousSlots = {"Tabard", "Shirt"}
 local mainHandSlot = "Main Hand"
 local offHandSlot = "Off-hand"
 local rangedSlot = "Ranged"
+
+local HIDDEN_ENTRY = 11930 -- Emperor's New Cape
 
 -- For hiding hair/beard
 local chestSlots = {"Chest", "Tabard", "Shirt"}
@@ -366,6 +368,7 @@ do
     btn:SetWidth(mainFrame.dressingRoom:GetWidth()/5)
     btn:SetText("Apply")
     btn:SetScript("OnClick", function()
+        SendChatMessage("#transmog nude","SAY")
         local slots = mainFrame.slots
         for i=1, #slotOrder do
             if slots[slotOrder[i]].itemId ~= nil then
@@ -546,6 +549,8 @@ local function slot_OnControlLeftClick(self)
     if self.itemId ~= nil then
         --ns.ShowWowheadURLDialog(self.itemId)
         SendChatMessage("#transmog "..slotIds[self.slotName].." "..self.itemId,"SAY")
+    else
+        SendChatMessage("#transmog "..slotIds[self.slotName].." "..HIDDEN_ENTRY,"SAY")
     end
 end
 
@@ -588,6 +593,9 @@ local function slot_OnEnter(self)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     if self.itemId == nil then
         GameTooltip:AddLine(self.slotName)
+        if GetSettings().showShortcutsInTooltip then
+            GameTooltip:AddLine("|cff00ff00Ctrl + Left Click:|r hide the item in this slot.")
+        end
     else
         local _, link = GetItemInfo(self.itemId)
         GameTooltip:SetHyperlink(link)
